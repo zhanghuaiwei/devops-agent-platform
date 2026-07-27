@@ -1,0 +1,5 @@
+# AI 生成:pnpm 配置 —— 允许以下依赖执行安装期构建脚本(vitest 依赖 esbuild 原生二进制;eslint 依赖 unrs-resolver)
+# 注意:pnpm 11 已移除 onlyBuiltDependencies,统一用 allowBuilds 映射(true=允许, false=禁止)
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

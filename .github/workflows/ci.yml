@@ -19,6 +19,13 @@ jobs:
         env:
           GITLEAKS_ENABLE_COMMENTS: true
 
+  # ---------- 边界检查:与本地 pre-commit 同一脚本,CI 兜底(本地可被 --no-verify 跳过) ----------
+  boundary-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .ai/hooks/boundary-check.sh
+
   # ---------- Web 端:lint + 单测 + 构建 ----------
   web:
     runs-on: ubuntu-latest
@@ -27,15 +34,18 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4        # 包管理器:pnpm(版本见 web/package.json packageManager 字段)
+        with:
+          version: 11
       - uses: actions/setup-node@v4
         with:
-          node-version: 22               # 版本红线:Node.js 22 LTS
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - run: npm ci
-      - run: npm run lint                 # 规范门:0 warning
-      - run: npm run test -- --run        # 自动测试门
-      - run: npm run build                # 构建门
+          node-version: 22               # 版本红线:Node.js 22 LTS(本地用 nvm use 对齐 .nvmrc)
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint                    # 规范门:0 warning
+      - run: pnpm test -- --run           # 自动测试门
+      - run: pnpm build                   # 构建门
 
   # ---------- Server 端:checkstyle + 单测 + 打包 ----------
   server:
