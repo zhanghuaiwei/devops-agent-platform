@@ -1,0 +1,59 @@
+# AI 生成:主应用配置 —— 骨架已完成;密钥一律走环境变量(安全红线第 1 条)
+# 学习者注意:本地开发用 devops/.env 注入环境变量,不要把真实值写进本文件
+spring:
+  application:
+    name: devops-server
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:devops_agent}
+    username: ${DB_USER:devops}
+    password: ${DB_PASSWORD:devops123}   # 仅本地默认值;生产必须注入环境变量
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  # 虚拟线程:Spring Boot 3.3 + Java 21 一行开启,WebSocket 高并发的关键(F1.2)
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8080
+
+# Actuator:F1.6 监控面板的 HTTP 数据来源;只暴露必要端点(安全考虑)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized     # 健康详情仅认证用户可见
+
+# 应用自定义配置
+devops:
+  # Agent 引擎地址:server → agent-engine 的唯一通道(ADR-2)
+  agent-engine:
+    base-url: ${AGENT_ENGINE_URL:http://localhost:8000}
+    connect-timeout-ms: 3000
+    read-timeout-ms: 60000              # Agent 推理耗时长,读超时放宽
+  # JWT 配置(F1.1:accessToken 2h + refreshToken 7d)
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-prod-please-use-env-var}
+    access-token-ttl-seconds: 7200
+    refresh-token-ttl-seconds: 604800
+  # 自定义 Starter 开关(F1.8:条件装配的演示入口)
+  tools:
+    github:
+      enabled: true
+      token: ${GITHUB_TOKEN:}           # GitHub 个人访问令牌,只走环境变量
+    docker:
+      enabled: false                    # 本地无 Docker API 需求时关闭
+    k8s:
+      enabled: false
+
+# MyBatis-Plus
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false

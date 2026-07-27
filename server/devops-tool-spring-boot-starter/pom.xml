@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AI 生成:自定义 Starter 模块 POM —— 独立于主应用,可发布到私有 Maven 仓库(F1.8) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.devopsagent</groupId>
+    <artifactId>devops-agent-platform</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>devops-tool-spring-boot-starter</artifactId>
+  <name>devops-tool-spring-boot-starter</name>
+  <description>DevOps 工具客户端自动装配 Starter(GitHub / Docker / K8s)</description>
+
+  <dependencies>
+    <!-- 自动装配核心:@ConditionalOnProperty、@ConfigurationProperties 等注解来源 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <!-- Actuator:HealthIndicator 健康指示器(F1.8 验收标准) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- 配置提示元数据处理器:生成 spring-configuration-metadata.json,让 IDE 在 application.yml 中自动补全 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- Web 客户端:GitHubApiClient 内部用 RestClient 调 GitHub REST API -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

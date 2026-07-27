@@ -1,0 +1,33 @@
+# AI 生成:Python 项目元数据 + ruff 配置(lint 规则即"代码规范"的机器化)
+[project]
+name = "devops-agent-engine"
+version = "0.1.0"
+description = "DevOps Agent 智能运维平台 - Python Agent 引擎(FastAPI + LangChain ReAct)"
+requires-python = ">=3.12"          # 版本红线:Python 3.12
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W",   # pycodestyle:基础风格
+  "F",        # pyflakes:未使用导入/变量等逻辑错误
+  "I",        # isort:导入排序
+  "UP",       # pyupgrade:强制现代语法(如 X | None)
+  "B",        # bugbear:常见 bug 模式(如可变默认参数)
+  "ASYNC",    # 异步反模式(async 函数里同步阻塞调用)
+  "S",        # bandit 安全规则(硬编码密码、shell 注入等,安全红线的机器化)
+]
+ignore = [
+  "S101",     # 测试里 assert 是合法的,放行
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"                # 异步测试免装饰器
+testpaths = ["tests"]
+addopts = "-q --cov=app --cov-report=term-missing"

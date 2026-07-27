@@ -1,0 +1,94 @@
+# AI 生成:Docker Compose 编排 —— 基础设施即代码
+# 阶段一(W1)只需 postgres/redis/minio;server/agent-engine/web 在对应端就绪后取消注释
+# 教程见 docs/devops-guide/01-Docker与Compose.md
+name: devops-agent-platform
+
+services:
+  # ---------- PostgreSQL 16(业务数据) ----------
+  postgres:
+    image: postgres:16-alpine          # alpine 镜像小 ~80MB;版本红线 PG16
+    environment:
+      POSTGRES_USER: ${DB_USER:-devops}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-devops123}   # 仅本地默认值
+      POSTGRES_DB: ${DB_NAME:-devops_agent}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro   # 首次启动自动建表(F1.x 表结构)
+    healthcheck:                       # 健康检查:server 依赖它就绪后再启动
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ---------- Redis 7.2(refreshToken + 限流计数) ----------
+  redis:
+    image: redis:7.2-alpine
+    command: redis-server --appendonly yes   # AOF 持久化:重启不丢黑名单/限流数据
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ---------- MinIO(日志文件对象存储,S3 兼容) ----------
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin123}   # 仅本地默认值
+    ports:
+      - "9000:9000"    # S3 API
+      - "9001:9001"    # 管理控制台
+    volumes:
+      - miniodata:/data
+
+  # ---------- Python Agent 引擎(W3 就绪后启用) ----------
+  # agent-engine:
+  #   build:
+  #     context: ../agent-engine
+  #     dockerfile: ../devops/docker/Dockerfile.agent
+  #   env_file: ../agent-engine/.env   # 密钥只走 env,不入镜像(安全红线)
+  #   ports:
+  #     - "8000:8000"
+  #   # 挂 docker.sock 让容器内 SDK 能查宿主机容器(F1.4);等同 root,仅内网
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+
+  # ---------- Java server(W2 就绪后启用) ----------
+  # server:
+  #   build:
+  #     context: ../server
+  #     dockerfile: ../devops/docker/Dockerfile.server
+  #   environment:
+  #     DB_HOST: postgres        # 容器网络内用服务名互访,不是 localhost(常见坑)
+  #     REDIS_HOST: redis
+  #     AGENT_ENGINE_URL: http://agent-engine:8000
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     GITHUB_TOKEN: ${GITHUB_TOKEN}
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy   # 等健康检查通过再启动
+  #     redis:
+  #       condition: service_healthy
+
+  # ---------- Web 前端(W4 就绪后启用) ----------
+  # web:
+  #   build:
+  #     context: ../web
+  #     dockerfile: ../devops/docker/Dockerfile.web
+  #   ports:
+  #     - "3000:3000"
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

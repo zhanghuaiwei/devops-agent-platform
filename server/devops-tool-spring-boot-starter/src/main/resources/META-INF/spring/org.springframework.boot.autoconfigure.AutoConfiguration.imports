@@ -1,0 +1,4 @@
+# AI 生成:Spring Boot 3.x 自动配置注册声明(F1.8)
+# 机制:Spring Boot 启动时读取所有 jar 包中本文件,逐行加载自动配置类
+# (Spring Boot 2.x 用的是 META-INF/spring.factories,3.x 已迁移到本文件 —— 面试高频考点)
+com.devopsagent.starter.DevopsToolAutoConfiguration

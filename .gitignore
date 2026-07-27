@@ -1,0 +1,40 @@
+# ===== AI 生成:全仓 Git 忽略规则(按端分组,保持单一来源) =====
+
+# --- 通用:系统与编辑器 ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- 通用:密钥与环境(安全红线:任何 .env 都不入库) ---
+.env
+.env.*
+!.env.example
+
+# --- web/ (Node.js / Next.js) ---
+node_modules/
+web/.next/
+web/out/
+web/coverage/
+*.tsbuildinfo
+
+# --- server/ (Java / Maven) ---
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+server/**/logs/
+
+# --- agent-engine/ (Python) ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+agent-engine/htmlcov/
+
+# --- 运行时产物 ---
+logs/
+*.log

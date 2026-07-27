@@ -1,0 +1,15 @@
+# AI 生成:Git 行尾与二进制约定 —— 跨平台协作的一致性保障
+# 注意:本文件不支持行尾注释,注释必须独占一行
+
+# 统一 LF 行尾(Windows 协作者 checkout 时由 Git 转换)
+* text=auto eol=lf
+
+# 二进制文件不做行尾转换与文本 diff
+*.jar binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+
+# lock 文件不参与 diff 审查(噪音大),冲突时重新生成
+package-lock.json -diff

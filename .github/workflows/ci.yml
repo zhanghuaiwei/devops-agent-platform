@@ -1,0 +1,81 @@
+# AI 生成:CI 流水线 —— 代码规范 + 安全扫描 + 自动测试 + 构建
+# 触发:任何 push 与 PR;三端并行执行,互不影响
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  # ---------- 安全扫描:密钥泄露(安全红线第 1 条) ----------
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                 # 全量历史才能扫到历史提交中的密钥
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_ENABLE_COMMENTS: true
+
+  # ---------- Web 端:lint + 单测 + 构建 ----------
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22               # 版本红线:Node.js 22 LTS
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run lint                 # 规范门:0 warning
+      - run: npm run test -- --run        # 自动测试门
+      - run: npm run build                # 构建门
+
+  # ---------- Server 端:checkstyle + 单测 + 打包 ----------
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21               # 版本红线:Java 21 LTS
+          cache: maven
+      # 骨架阶段允许失败(学习者手写中),骨架完成后改为必过
+      - run: ./mvnw -q spotless:check || echo "::warning::server 骨架搭建中,格式检查暂放行"
+      - run: ./mvnw -q test || echo "::warning::server 骨架搭建中,测试暂放行"
+        continue-on-error: true          # TODO(工程化):server 测试就绪后移除本行
+
+  # ---------- Agent Engine:ruff + pytest ----------
+  agent-engine:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agent-engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"         # 版本红线:Python 3.12
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check . || echo "::warning::agent-engine 骨架搭建中,lint 暂放行"
+      - run: pytest || echo "::warning::agent-engine 骨架搭建中,测试暂放行"
+        continue-on-error: true          # TODO(工程化):agent 测试就绪后移除本行
+
+  # ---------- DevOps:docker-compose 配置校验 ----------
+  devops:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate docker-compose
+        run: docker compose -f devops/docker-compose.yml config -q

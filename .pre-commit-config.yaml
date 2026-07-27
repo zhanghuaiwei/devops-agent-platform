@@ -1,0 +1,60 @@
+# AI 生成:pre-commit 全仓提交前自动检查(代码规范 + 安全 + 边界)
+# 安装:pip install pre-commit && pre-commit install
+# 手动全量:pre-commit run --all-files
+repos:
+  # ---- 通用卫生检查 ----
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace        # 行尾空白
+      - id: end-of-file-fixer          # 文件末尾换行
+      - id: check-yaml                 # YAML 语法
+      - id: check-added-large-files    # 防止大文件入库(>500KB)
+        args: ["--maxkb=500"]
+      - id: check-merge-conflict       # 冲突标记残留
+      - id: detect-private-key         # 私钥泄露检测
+
+  # ---- 安全:密钥扫描(安全红线第 1 条) ----
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  # ---- Web:ESLint + Prettier(仅 web/ 变更时触发) ----
+  - repo: local
+    hooks:
+      - id: web-lint
+        name: web eslint
+        entry: bash -c 'cd web && npx eslint . --max-warnings=0'
+        language: system
+        files: ^web/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
+  # ---- Agent Engine:ruff lint + format ----
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^agent-engine/
+      - id: ruff-format
+        files: ^agent-engine/
+
+  # ---- Server:Google Java Format ----
+  - repo: local
+    hooks:
+      - id: java-format
+        name: google-java-format
+        entry: bash -c 'cd server && ./mvnw -q spotless:check'
+        language: system
+        files: ^server/.*\.java$
+        pass_filenames: false
+
+  # ---- 边界检查:自定义脚本(见 .workbuddy/hooks/boundary-check.sh) ----
+  - repo: local
+    hooks:
+      - id: boundary-check
+        name: code boundary check
+        entry: bash .workbuddy/hooks/boundary-check.sh
+        language: system
+        pass_filenames: false

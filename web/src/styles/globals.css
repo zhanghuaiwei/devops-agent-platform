@@ -1,0 +1,20 @@
+/* AI 生成：全局样式——Tailwind 指令 + 滚动条微调 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 代码块高亮主题背景与深色 pre 容器协调：rehype-highlight 默认是浅色配色，
+   这里给 hljs 一个深色底，保持聊天区代码块观感一致 */
+pre .hljs {
+  background: transparent;
+  color: #e2e8f0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
