@@ -34,7 +34,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- 第三方依赖版本集中管理,升级只改这里 -->
     <mybatis-plus.version>3.5.7</mybatis-plus.version>
-    <jjwt.version>0.12.6</jjwt.version>
+    <jjwt.version>0.13.0</jjwt.version>
   </properties>
 
   <dependencyManagement>
