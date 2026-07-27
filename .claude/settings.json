@@ -1,0 +1,16 @@
+{
+  "_comment": "AI 生成:Claude Code 项目级设置 —— 注册 PostToolUse hook,AI 编辑文件后按类型自动 lint。脚本唯一内容源在 .ai/hooks/",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .ai/hooks/post-edit-lint.sh ${CLAUDE_FILE_PATHS:-}"
+          }
+        ]
+      }
+    ]
+  }
+}

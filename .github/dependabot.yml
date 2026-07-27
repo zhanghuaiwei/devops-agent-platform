@@ -1,0 +1,27 @@
+# AI 生成:依赖更新治理 —— 每周检查依赖更新与安全漏洞,自动开 PR
+# 注意:版本红线内依赖(见 .ai/rules/project.md)的更新 PR 必须按"动机/破坏性评估/回滚方案"人工评估,禁止直接合并
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: maven
+    directory: /server
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: pip
+    directory: /agent-engine
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3

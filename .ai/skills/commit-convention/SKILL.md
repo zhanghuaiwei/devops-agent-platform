@@ -1,5 +1,5 @@
 ---
-# AI 生成:WorkBuddy Skill —— Conventional Commits 提交规范检查
+# AI 生成:Skill 内容源 —— Conventional Commits 提交规范。适配层:.claude/commands/commit.md(各智能体入口只引用本文件)
 name: commit-convention
 description: 生成或校验符合本仓库 Conventional Commits 规约的提交信息。当用户要求"提交代码/写 commit/检查提交信息"时使用。
 ---

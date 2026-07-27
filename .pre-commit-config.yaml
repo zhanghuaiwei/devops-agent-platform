@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: web-lint
         name: web eslint
-        entry: bash -c 'cd web && npx eslint . --max-warnings=0'
+        entry: bash -c 'cd web && pnpm exec eslint . --max-warnings=0'
         language: system
         files: ^web/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
@@ -50,11 +50,11 @@ repos:
         files: ^server/.*\.java$
         pass_filenames: false
 
-  # ---- 边界检查:自定义脚本(见 .workbuddy/hooks/boundary-check.sh) ----
+  # ---- 边界检查:自定义脚本(见 .ai/hooks/boundary-check.sh) ----
   - repo: local
     hooks:
       - id: boundary-check
         name: code boundary check
-        entry: bash .workbuddy/hooks/boundary-check.sh
+        entry: bash .ai/hooks/boundary-check.sh
         language: system
         pass_filenames: false

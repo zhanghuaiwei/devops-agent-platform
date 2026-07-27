@@ -5,8 +5,8 @@
 
 ## 自检清单
 
-- [ ] 遵守版本红线(未擅自升级/降级 `CLAUDE.md` 所列依赖)
-- [ ] 遵守代码边界(web 不直连数据源;server 只走 agent-engine 的 4 个端点)
+- [ ] 遵守版本红线(未擅自升级/降级 `.ai/rules/project.md` 所列依赖)
+- [ ] 遵守代码边界(见 `.ai/rules/boundaries.md`:web 不直连数据源;server 只走 agent-engine 的 4 个端点)
 - [ ] 无硬编码密钥;新增配置已提供 `.env.example` 占位
 - [ ] 新增/变更代码已带测试,本地通过
 - [ ] `pre-commit run --all-files` 通过

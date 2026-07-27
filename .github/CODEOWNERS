@@ -1,0 +1,14 @@
+# AI 生成:代码所有权 —— 与 .ai/rules/boundaries.md 的"代码所有权地图"对应
+# 作用:PR 自动请求对应 owner 审查;企业级项目中应替换为各模块负责人/团队
+# TODO(工程化):将 @zhanghuaiwei 替换为实际 GitHub 用户名或团队(如 @org/web-team)
+
+# 默认:全仓归学习者本人
+*                                    @zhanghuaiwei
+
+# 高风险区域(对照所有权地图,企业级应双人审查)
+/server/**/common/                   @zhanghuaiwei    # 三端共享逻辑唯一出口
+/agent-engine/app/tools/             @zhanghuaiwei    # Tool description 影响 Agent 行为
+/web/src/mocks/                      @zhanghuaiwei    # mock 数据唯一位置
+/devops/                             @zhanghuaiwei    # 基础设施即代码
+/.ai/                                @zhanghuaiwei    # AI 规约内容源
+/.github/workflows/                  @zhanghuaiwei    # CI 流水线

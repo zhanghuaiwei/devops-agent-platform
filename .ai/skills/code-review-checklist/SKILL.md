@@ -1,5 +1,5 @@
 ---
-# AI 生成:WorkBuddy Skill —— 本仓库代码审查清单
+# AI 生成:Skill 内容源 —— 本仓库代码审查清单。适配层:.claude/commands/review.md(各智能体入口只引用本文件)
 name: code-review-checklist
 description: 按本仓库四级严重度审查代码变更。当用户要求"审查/ review 这段代码或这次改动"时使用。
 ---
@@ -20,7 +20,8 @@ description: 按本仓库四级严重度审查代码变更。当用户要求"审
 - [ ] web 组件直连数据库/直接 new HTTP client(必须走 `/api/**`)
 - [ ] server 直连 agent 数据源(必须走 4 个契约端点)
 - [ ] mock 数据出现在 `web/src/mocks/` 之外
-- [ ] 代码落在错误的包(对照 CLAUDE.md 包结构表)
+- [ ] 代码落在错误的包(对照 `.ai/rules/boundaries.md` 包结构表)
+- [ ] 带 `TODO(学习者)` 标记的骨架文件被 AI 补全实现
 
 ## P2 — 规范(应当修复)
 

@@ -1,20 +1,21 @@
-<!-- 本文由 AI 生成,是 WorkBuddy 在本仓库工作时的专属协作规约 -->
+<!-- 本文由 AI 生成,是 WorkBuddy 在本仓库工作时的专属协作规约(适配层);规则与能力的唯一内容源在 .ai/ -->
 # CODEBUDDY.md — WorkBuddy 项目协作规约
 
-> 本文件面向 WorkBuddy(本环境)。通用规约见 `AGENTS.md`,版本红线与代码边界见 `CLAUDE.md`。
+> 通用规约入口见 `AGENTS.md`(Codex 兼容);规则正文在 `.ai/rules/`,能力正文在 `.ai/skills/` 与 `.ai/agents/`。
 
 ## 1. 工作模式
 
-- **默认 Craft 模式**,但涉及 `server/`、`agent-engine/` 中带 `TODO(学习者)` 标记的骨架文件时,切换为"只讲解、不代写",除非用户明确说"帮我实现"
+- **默认 Craft 模式**,但涉及 `server/`、`agent-engine/` 中带 `TODO(学习者)` 标记的骨架文件时,切换为"只讲解、不代写",除非用户明确说"帮我实现"(细则:`.ai/rules/workflow.md`)
 - 本项目的学习者(用户)正在手写 server 与 agent-engine:AI 的输出应以**教程、评审、答疑**为主,而非直接产出实现
 
-## 2. 本仓库已装载的能力
+## 2. 本仓库已装载的能力(内容源在 `.ai/`)
 
 | 能力 | 位置 | 用途 |
 |------|------|------|
-| Skills | `.workbuddy/skills/` | 提交规范检查、代码审查清单、API 契约检查 |
-| subAgent | `.workbuddy/agents/` | code-reviewer / security-reviewer / test-writer |
-| Hooks | `.workbuddy/hooks/` | 编辑后自动 lint、提交前边界检查(需在设置中启用) |
+| 规则 | `.ai/rules/` | 版本红线 / 代码边界 / 安全红线 / 工作流 / 规范与测试 |
+| Skills | `.ai/skills/` | 提交规范检查、代码审查清单、API 契约检查 |
+| subAgent 提示词 | `.ai/agents/` | code-reviewer / security-reviewer / test-writer |
+| Hooks | `.ai/hooks/` | 编辑后自动 lint、提交前边界检查(启用方式见该目录 README) |
 
 ## 3. 交互约定
 
@@ -26,6 +27,6 @@
 ## 4. 快速验证命令
 
 ```bash
-cd web && npm run lint && npm run build      # Web 端质量门
-pre-commit run --all-files                    # 全仓提交前检查
+cd web && pnpm lint && pnpm build            # Web 端质量门(先 nvm use 对齐 Node 版本)
+pre-commit run --all-files                    # 全仓提交前检查(含 .ai/hooks/boundary-check.sh)
 ```

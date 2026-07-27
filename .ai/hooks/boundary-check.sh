@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# AI 生成:代码边界检查脚本 —— 被 pre-commit 与 WorkBuddy hooks 复用
-# 规则来源:CLAUDE.md 第 2 节"代码边界"
+# AI 生成:代码边界检查脚本 —— 被 pre-commit 与各 AI 智能体 hooks 复用
+# 规则来源:.ai/rules/boundaries.md"代码边界"
 # 发现违例时输出文件:行号并以非零码退出,阻止提交
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -35,7 +35,7 @@ fi
 if grep -rn --include='*.java' --include='*.py' --include='*.ts' --include='*.tsx' \
     -E '(password|secret|api_?key)\s*=\s*["'\''][^"'\''\$]{8,}' \
     "$ROOT/server" "$ROOT/agent-engine" "$ROOT/web/src" 2>/dev/null \
-    --exclude-dir=mocks \
+    --exclude-dir=mocks --exclude-dir=.venv --exclude-dir=node_modules \
     | grep -v -i 'example\|placeholder\|TODO' ; then
   echo "[boundary-check] 违规:疑似硬编码密钥(安全红线第 1 条)"
   FAILED=1
