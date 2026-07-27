@@ -37,7 +37,7 @@ jobs:
       - uses: pnpm/action-setup@v4        # 包管理器:pnpm(版本见 web/package.json packageManager 字段)
         with:
           version: 11
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22               # 版本红线:Node.js 22 LTS(本地用 nvm use 对齐 .nvmrc)
           cache: pnpm
