@@ -34,7 +34,11 @@ public class SecurityConfig {
     // TODO(学习者):按 docs/server-guide/03 完成过滤器链配置
     // 提示:http.csrf(disable).sessionManagement(STATELESS).authorizeHttpRequests(...)
     //      .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-    throw new UnsupportedOperationException("TODO(学习者):实现 SecurityFilterChain");
+    //throw new UnsupportedOperationException("TODO(学习者):实现 SecurityFilterChain");
+
+      http.csrf(c -> c.disable())
+          .authorizeHttpRequests(a -> a.anyRequest().permitAll());
+      return http.build();
   }
 
   /**
